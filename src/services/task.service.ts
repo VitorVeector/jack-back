@@ -10,9 +10,14 @@ import { CreateTaskDTO } from '../DTO/CreateTaskDTO';
 export class TaskService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findAll() {
+    async findAllByUser(userId: number) {
+        if (!userId) {
+            throw new BadRequestException('User ID must be provided');
+        }
         return this.prisma.task.findMany({
-            include: { user: true },
+            where: {
+                userId: Number(userId),
+            },
         });
     }
 

@@ -16,7 +16,7 @@ export class UserController {
         return this.userService.findOne(id);
     }
 
-    @Post()
+    @Post('register')
     async create(@Body() createUserDto: CreateUserDTO) {
         return this.userService.create(createUserDto);
     }

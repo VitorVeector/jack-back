@@ -1,11 +1,11 @@
 import {
     Body,
     Controller,
-    Delete,
     Get,
     Param,
     Patch,
     Post,
+    Query,
 } from '@nestjs/common';
 import { TaskService } from 'src/services/task.service';
 import { CreateTaskDTO } from '../DTO/CreateTaskDTO';
@@ -15,8 +15,8 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get()
-    async findAll() {
-        return this.taskService.findAll();
+    async findAll(@Query('userId') userId: number) {
+        return this.taskService.findAllByUser(userId);
     }
 
     @Post()
@@ -27,10 +27,5 @@ export class TaskController {
     @Patch(':id/complete')
     async markAsCompleted(@Param('id') id: number) {
         return this.taskService.markAsCompleted(id);
-    }
-
-    @Delete(':id')
-    async remove(@Param('id') id: number): Promise<void> {
-        return this.taskService.deleteTask(id);
     }
 }
