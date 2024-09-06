@@ -16,7 +16,7 @@ export class TaskService {
         }
         return this.prisma.task.findMany({
             where: {
-                userId: Number(userId),
+                userId: userId,
             },
         });
     }
@@ -26,7 +26,7 @@ export class TaskService {
 
         if (!userId) {
             throw new BadRequestException(
-                'User ID must be provided for task creation',
+                'user ID must be provided for task creation',
             );
         }
 
@@ -35,7 +35,7 @@ export class TaskService {
         });
 
         if (!userExists) {
-            throw new NotFoundException(`User with ID ${userId} not found`);
+            throw new NotFoundException(`user with ID ${userId} not found`);
         }
 
         return this.prisma.task.create({
@@ -46,18 +46,20 @@ export class TaskService {
         });
     }
 
-    async markAsCompleted(id: number) {
+    async markAsCompleted(id: number, isCompleted: boolean) {
         const task = await this.prisma.task.findUnique({
-            where: { id },
+            where: {
+                id: id,
+            },
         });
 
         if (!task) {
-            throw new NotFoundException(`Task with ID ${id} not found`);
+            throw new Error('Task not found');
         }
 
-        return this.prisma.task.update({
-            where: { id },
-            data: { isCompleted: true },
+        return await this.prisma.task.update({
+            where: { id: id },
+            data: { isCompleted: isCompleted },
         });
     }
 
